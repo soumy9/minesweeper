@@ -1,0 +1,19 @@
+.grid{
+	display: flex;
+	flex-direction: column;
+}
+.row{
+	display: flex;
+	flex-direction: row;
+}
+.cell{
+	width: 40px;
+	height: 40px;
+	padding: 0;
+	display: flex;
+	border: 1px solid gray;
+	background-color: #fff;
+	border-radius: 0;
+	justify-content: center;
+	align-items: center;
+}
