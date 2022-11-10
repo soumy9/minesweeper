@@ -17,3 +17,12 @@
 	justify-content: center;
 	align-items: center;
 }
+
+.uncovered{
+	background-color: darkgrey;
+}
+
+.covered{
+	background-color: lightgrey;
+	box-shadow: inset 1px 1px;
+}
