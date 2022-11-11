@@ -1,16 +1,24 @@
 import React, { useEffect, useState } from "react";
 import MineSweeper from "./minesweeper";
 import "./App.css";
-
-const Grid = (props: { height: number; width: number; mines: number;levelName:string }) => {
-  const { height, width, mines,levelName } = props;
-	console.log({props})
+const Grid = (props: {
+  height: number;
+  width: number;
+  mines: number;
+  levelName: string;
+}) => {
+  const { height, width, mines, levelName } = props;
+  console.log({ props });
   const [grid, setGrid] = useState<number[][]>([]);
-	console.log({grid});
+  console.log({ grid });
   const [isGameOver, setIsGameOver] = useState<boolean>(false);
   const [isGameWon, setIsGameWon] = useState<boolean>(false);
   const [clicks, setClick] = useState<number>(0);
-  const [cellsLeft, setCellsLeft] = useState(width*height-mines);
+  const [cellsLeft, setCellsLeft] = useState(width * height - mines);
+  const [flagsCount, setFlagsCount] = useState<number>(mines);
+  const [flagPositions, setFlagPositions] = useState<Set<string>>(
+    new Set<string>()
+  );
   function visitNeighbors(
     row: number,
     col: number,
@@ -60,10 +68,10 @@ const Grid = (props: { height: number; width: number; mines: number;levelName:st
       setCellsLeft((cellsLeft) => --cellsLeft);
     }
   }
-	useEffect(()=>{
-		const ms = new MineSweeper(height, width, mines);
-		setGrid(ms.grid);
-	},[height, mines, width]);
+  useEffect(() => {
+    const ms = new MineSweeper(height, width, mines);
+    setGrid(ms.grid);
+  }, [height, mines, width]);
   const cellClickHandler = (event: React.MouseEvent<HTMLElement>) => {
     if (isGameOver || isGameWon) return;
     const target: HTMLElement = event.currentTarget;
@@ -79,17 +87,32 @@ const Grid = (props: { height: number; width: number; mines: number;levelName:st
       });
     }
   };
+  const placeFlagHandler = (row: number, col: number) => {
+    setFlagPositions((flagPositions) => {
+      if (flagPositions.has(`${row},${col}`)) {
+        flagPositions.delete(`${row},${col}`);
+      } else {
+        flagPositions.add(`${row},${col}`);
+      }
+      //return a new set so that state reference is updated
+      return new Set(flagPositions);
+    });
+  };
   useEffect(() => {
     if (cellsLeft === 0) {
       setIsGameWon(true);
       setIsGameOver(true);
     }
   }, [cellsLeft]);
+  useEffect(() => {
+    setFlagsCount(mines - flagPositions.size);
+  }, [mines, flagPositions]);
   return (
     <div className="Grid">
-			<h1>Level: {levelName}</h1>
+      <h1>Level: {levelName}</h1>
       <p>Clicks: {clicks}</p>
       <p>Cells Left: {cellsLeft}</p>
+      <p>Flags left: {flagsCount}</p>
       {isGameOver ? (
         isGameWon ? (
           <p>🎉You won 🎉</p>
@@ -115,15 +138,26 @@ const Grid = (props: { height: number; width: number; mines: number;levelName:st
                     key={`col-${c}`}
                     data-row={r}
                     data-col={c}
-                    onClick={cellClickHandler}
+                    onClick={(e) => {
+                      if (flagPositions.has(`${r},${c}`)) return;
+                      cellClickHandler(e);
+                    }}
+                    onContextMenu={(e) => {
+                      e.preventDefault();
+                      if (col === Number.NEGATIVE_INFINITY) return;
+                      placeFlagHandler(r, c);
+                    }}
                   >
-                    {col === Number.NEGATIVE_INFINITY || col === 0
-                      ? " "
-                      : col === Number.POSITIVE_INFINITY
-                      ? isGameOver
-                        ? "💣"
-                        : " "
-                      : col}
+                    {col > 0 && col < Number.POSITIVE_INFINITY ? col : null}
+                    {col === Number.POSITIVE_INFINITY && isGameOver && "💣"}
+                    {col === Number.POSITIVE_INFINITY &&
+                      flagPositions.has(`${r},${c}`) &&
+                      "🚩"}
+                    {col === 0
+                      ? flagPositions.has(`${r},${c}`)
+                        ? "🚩"
+                        : ""
+                      : ""}
                   </button>
                 );
               })}
