@@ -1,43 +1,81 @@
-.App{
-	margin: 4rem 7rem;
+.App {
+  margin: 4rem 7rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
-.Grid{
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
+.Grid {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
-.grid{
-	display: flex;
-	flex-direction: column;
-	border: 2px solid black;
+.grid {
+  display: flex;
+  flex-direction: column;
+  border: 2px solid black;
+	margin-left: 4rem;
 }
-.row{
-	display: flex;
-	flex-direction: row;
+.row {
+  display: flex;
+  flex-direction: row;
 }
-.cell{
-	width: 40px;
-	height: 40px;
-	padding: 0;
-	display: flex;
-	border: 1px solid gray;
-	background-color: #fff;
-	border-radius: 0;
-	justify-content: center;
-	align-items: center;
+.cell {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  display: flex;
+  border: 1px solid gray;
+  background-color: #fff;
+  border-radius: 0;
+  justify-content: center;
+  align-items: center;
 }
 
-.covered{
-	background-color: darkgrey;
+.covered {
+  background-color: darkgrey;
 }
 
-.uncovered{
-	background-color: lightgrey;
-	box-shadow: inset 1px 1px;
+.uncovered {
+  background-color: lightgrey;
+  box-shadow: inset 1px 1px;
 }
-.mine-found{
-	background-color: green;
+.mine-found {
+  background-color: green;
 }
-.mine-not-found{
-	background-color: red;
+.mine-not-found {
+  background-color: red;
+}
+.wrong-flag {
+  position: relative;
+}
+.wrong-flag::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 100%;
+  border: 1px solid red;
+  background-color: red;
+  transform: rotate(45deg);
+}
+.wrong-flag::before {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 100%;
+  border: 1px solid red;
+  background-color: red;
+  transform: rotate(-45deg);
+}
+
+.restart-btn {
+  cursor: pointer;
+  display: flex;
+  width: 3rem;
+  height: 3rem;
+  font-size: 2rem;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  border: 2px solid black;
+  border-radius: 0;
 }

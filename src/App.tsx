@@ -29,16 +29,32 @@ const difficultyLevels: DifficultyLevel[] = [
     mines: 70,
   },
 ];
+//enum catStateKeys {
+//  "happy",
+//  "guessing",
+//  "sat",
+//  "boss",
+//}
+export const catStates = {
+  happy: "😸",
+  guessing: "🙀",
+  sad: "😿",
+  boss: "😻",
+};
 
 function App() {
   const [difficulty, setDifficulty] = useState<number>(0);
-  //const [height,setHeight]=useState<number>(0);
-  //const [width,setwidth]=useState<number>(0);
-  //const [mines,setmines]=useState<number>(0);
+  const [reRenderKey, setReRenderKey] = useState<number>(0);
+  const [catState, setCatState] = useState<string>(catStates.happy);
   const difficultyChangeHandler = (
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
     setDifficulty(parseInt(event.target.value));
+    // Whenever the selection changes, this will change the key of the Grid component and therefore it will re-render!!!
+    setReRenderKey((key) => ++key);
+  };
+  const restartHandler = () => {
+    setReRenderKey((key) => ++key);
   };
   return (
     <div className="App">
@@ -48,7 +64,15 @@ function App() {
         <option value={1}>Medium</option>
         <option value={2}>Hard</option>
       </select>
-      <Grid {...difficultyLevels[difficulty]} />
+      <button onClick={restartHandler} className="restart-btn">
+        {catState}
+      </button>
+      {/*This key prop can be used to re-draw the entire Grid component*/}
+      <Grid
+        {...difficultyLevels[difficulty]}
+        key={reRenderKey}
+        setCatState={setCatState}
+      />
     </div>
   );
 }
