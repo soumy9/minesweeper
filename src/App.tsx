@@ -15,7 +15,7 @@ const difficultyLevels: DifficultyLevel[] = [
     levelName: "easy",
     height: 7,
     width: 7,
-    mines: 10,
+    mines: 1,
   },
   {
     levelName: "medium",

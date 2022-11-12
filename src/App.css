@@ -1,6 +1,15 @@
+.App{
+	margin: 4rem 7rem;
+}
+.Grid{
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
 .grid{
 	display: flex;
 	flex-direction: column;
+	border: 2px solid black;
 }
 .row{
 	display: flex;
@@ -18,11 +27,11 @@
 	align-items: center;
 }
 
-.uncovered{
+.covered{
 	background-color: darkgrey;
 }
 
-.covered{
+.uncovered{
 	background-color: lightgrey;
 	box-shadow: inset 1px 1px;
 }

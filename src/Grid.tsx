@@ -73,7 +73,7 @@ const Grid = (props: {
     setGrid(ms.grid);
   }, [height, mines, width]);
   const cellClickHandler = (event: React.MouseEvent<HTMLElement>) => {
-    if (isGameOver || isGameWon) return;
+    if (isGameOver) return;
     const target: HTMLElement = event.currentTarget;
     const r = parseInt(target.getAttribute("data-row") || "");
     const c = parseInt(target.getAttribute("data-col") || "");
@@ -92,34 +92,55 @@ const Grid = (props: {
       if (flagPositions.has(`${row},${col}`)) {
         flagPositions.delete(`${row},${col}`);
       } else {
+				//dont place flags if 0 flags are left, also don't update the state in this case
+				if(flagPositions.size===mines) return flagPositions;
         flagPositions.add(`${row},${col}`);
       }
       //return a new set so that state reference is updated
       return new Set(flagPositions);
     });
   };
+	useEffect(()=>{
+		console.log('flagPositions set was updated');
+	},[flagPositions]);
   useEffect(() => {
     if (cellsLeft === 0) {
       setIsGameWon(true);
       setIsGameOver(true);
     }
-  }, [cellsLeft]);
+		setFlagPositions(flagPositions=>{
+			const newFlagPos=new Set<string>();
+			for(const pos of Array.from(flagPositions.keys())){
+				const [row,col]=pos.split(',').map(str=>parseInt(str));
+				
+				if(grid[row][col]===Number.NEGATIVE_INFINITY||(grid[row][col]>0&&grid[row][col]!==Number.POSITIVE_INFINITY)){
+				}else{
+					//keep flag at this cell
+					newFlagPos.add(pos);
+				}
+			}
+			return newFlagPos;
+		});
+  }, [cellsLeft, flagsCount, grid]);
   useEffect(() => {
+		console.log('flagPositions');
     setFlagsCount(mines - flagPositions.size);
   }, [mines, flagPositions]);
   return (
     <div className="Grid">
-      <h1>Level: {levelName}</h1>
-      <p>Clicks: {clicks}</p>
-      <p>Cells Left: {cellsLeft}</p>
-      <p>Flags left: {flagsCount}</p>
-      {isGameOver ? (
-        isGameWon ? (
-          <p>🎉You won 🎉</p>
-        ) : (
-          <p>GAME OVER!!!!💣</p>
-        )
-      ) : null}
+      <div>
+        <h1>Level: {levelName}</h1>
+        <p>Clicks: {clicks}</p>
+        <p>Cells Left: {cellsLeft}</p>
+        <p>Flags left: {flagsCount}</p>
+        {isGameOver ? (
+          isGameWon ? (
+            <p>🎉You won 🎉</p>
+          ) : (
+            <p>GAME OVER!!!!💣</p>
+          )
+        ) : null}
+      </div>
       <div className="grid">
         {grid.map((row, r) => {
           return (
