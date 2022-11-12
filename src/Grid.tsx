@@ -10,9 +10,7 @@ const Grid = (props: {
   setCatState: React.Dispatch<React.SetStateAction<string>>;
 }) => {
   const { height, width, mines, levelName, setCatState } = props;
-  console.log({ props });
   const [grid, setGrid] = useState<number[][]>([]);
-  console.log({ grid });
   const [isGameOver, setIsGameOver] = useState<boolean>(false);
   const [isGameWon, setIsGameWon] = useState<boolean>(false);
   const [clicks, setClick] = useState<number>(0);
@@ -21,12 +19,12 @@ const Grid = (props: {
   const [flagPositions, setFlagPositions] = useState<Set<string>>(
     new Set<string>()
   );
-  function visitNeighbors(
+  const visitNeighbors = (
     row: number,
     col: number,
     grid: number[][]
     //cellsLeft: number
-  ): void {
+  ): void => {
     // visit all its neighbours
     const neighbours: number[][] = [
       [-1, -1],
@@ -69,7 +67,7 @@ const Grid = (props: {
       grid[row][col] = nearbyMines;
       setCellsLeft((cellsLeft) => --cellsLeft);
     }
-  }
+  };
   const isCellClickable = (row: number, col: number): boolean => {
     if (
       grid[row][col] === Number.NEGATIVE_INFINITY ||
@@ -78,13 +76,6 @@ const Grid = (props: {
       return false;
     return true;
   };
-  useEffect(() => {
-    const ms = new MineSweeper(height, width, mines);
-    setGrid(ms.grid);
-  }, [height, mines, width]);
-  useEffect(() => {
-    setCatState(catStates.happy);
-  }, [setCatState]);
   const cellClickHandler = (event: React.MouseEvent<HTMLElement>) => {
     if (isGameOver) return;
     const target: HTMLElement = event.currentTarget;
@@ -115,7 +106,7 @@ const Grid = (props: {
     });
   };
   const mouseDownHandler = (r: number, c: number) => {
-    if (isCellClickable(r,c)) setCatState(catStates.guessing);
+    if (isCellClickable(r, c)) setCatState(catStates.guessing);
   };
   const mouseUpHandler = () => {
     if (isGameOver) {
@@ -128,6 +119,13 @@ const Grid = (props: {
       setCatState(catStates.happy);
     }
   };
+  useEffect(() => {
+    const ms = new MineSweeper(height, width, mines);
+    setGrid(ms.grid);
+  }, [height, mines, width]);
+  useEffect(() => {
+    setCatState(catStates.happy);
+  }, [setCatState]);
   useEffect(() => {
     console.log("flagPositions set was updated");
   }, [flagPositions]);
@@ -199,7 +197,7 @@ const Grid = (props: {
                       col !== Number.POSITIVE_INFINITY &&
                       "wrong-flag"
                     }`}
-                    key={`col-${c}`}
+                    key={`${r},${c}`}
                     data-row={r}
                     data-col={c}
                     onClick={(e) => {
@@ -211,10 +209,18 @@ const Grid = (props: {
                       if (col === Number.NEGATIVE_INFINITY) return;
                       placeFlagHandler(r, c);
                     }}
-                    onMouseDown={() => {
+                    onMouseDown={(event) => {
+											if(isGameOver) return;
+											console.log(event.button);
+											if(event.button===2) return;
                       mouseDownHandler(r, c);
                     }}
-                    onMouseUp={mouseUpHandler}
+                    onMouseUp={(event)=>{
+											if(isGameOver) return;
+											console.log(event.button);
+											if(event.button===2) return;
+											mouseUpHandler();
+										}}
                   >
                     {col > 0 && col < Number.POSITIVE_INFINITY ? col : null}
                     {col === Number.POSITIVE_INFINITY && isGameOver && "💣"}
