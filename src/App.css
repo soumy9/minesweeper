@@ -35,3 +35,9 @@
 	background-color: lightgrey;
 	box-shadow: inset 1px 1px;
 }
+.mine-found{
+	background-color: green;
+}
+.mine-not-found{
+	background-color: red;
+}

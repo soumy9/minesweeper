@@ -92,38 +92,41 @@ const Grid = (props: {
       if (flagPositions.has(`${row},${col}`)) {
         flagPositions.delete(`${row},${col}`);
       } else {
-				//dont place flags if 0 flags are left, also don't update the state in this case
-				if(flagPositions.size===mines) return flagPositions;
+        //dont place flags if 0 flags are left, also don't update the state in this case
+        if (flagPositions.size === mines) return flagPositions;
         flagPositions.add(`${row},${col}`);
       }
       //return a new set so that state reference is updated
       return new Set(flagPositions);
     });
   };
-	useEffect(()=>{
-		console.log('flagPositions set was updated');
-	},[flagPositions]);
+  useEffect(() => {
+    console.log("flagPositions set was updated");
+  }, [flagPositions]);
   useEffect(() => {
     if (cellsLeft === 0) {
       setIsGameWon(true);
       setIsGameOver(true);
     }
-		setFlagPositions(flagPositions=>{
-			const newFlagPos=new Set<string>();
-			for(const pos of Array.from(flagPositions.keys())){
-				const [row,col]=pos.split(',').map(str=>parseInt(str));
-				
-				if(grid[row][col]===Number.NEGATIVE_INFINITY||(grid[row][col]>0&&grid[row][col]!==Number.POSITIVE_INFINITY)){
-				}else{
-					//keep flag at this cell
-					newFlagPos.add(pos);
-				}
-			}
-			return newFlagPos;
-		});
+    setFlagPositions((flagPositions) => {
+      const newFlagPos = new Set<string>();
+      for (const pos of Array.from(flagPositions.keys())) {
+        const [row, col] = pos.split(",").map((str) => parseInt(str));
+
+        if (
+          grid[row][col] === Number.NEGATIVE_INFINITY ||
+          (grid[row][col] > 0 && grid[row][col] !== Number.POSITIVE_INFINITY)
+        ) {
+        } else {
+          //keep flag at this cell
+          newFlagPos.add(pos);
+        }
+      }
+      return newFlagPos;
+    });
   }, [cellsLeft, flagsCount, grid]);
   useEffect(() => {
-		console.log('flagPositions');
+    console.log("flagPositions");
     setFlagsCount(mines - flagPositions.size);
   }, [mines, flagPositions]);
   return (
@@ -155,6 +158,12 @@ const Grid = (props: {
                           (col > 0 && col !== Number.POSITIVE_INFINITY)
                         ? "uncovered"
                         : "covered"
+                    } ${
+                      isGameOver &&
+                      col === Number.POSITIVE_INFINITY &&
+                      (flagPositions.has(r + "," + c)
+                        ? "mine-found"
+                        : "mine-not-found")
                     }`}
                     key={`col-${c}`}
                     data-row={r}

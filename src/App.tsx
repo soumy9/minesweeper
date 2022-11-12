@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import MineSweeper from "./minesweeper";
+import React, { useState } from "react";
 import "./App.css";
 import Grid from "./Grid";
 
@@ -15,7 +14,7 @@ const difficultyLevels: DifficultyLevel[] = [
     levelName: "easy",
     height: 7,
     width: 7,
-    mines: 1,
+    mines: 10,
   },
   {
     levelName: "medium",
@@ -33,9 +32,9 @@ const difficultyLevels: DifficultyLevel[] = [
 
 function App() {
   const [difficulty, setDifficulty] = useState<number>(0);
-	//const [height,setHeight]=useState<number>(0);
-	//const [width,setwidth]=useState<number>(0);
-	//const [mines,setmines]=useState<number>(0);
+  //const [height,setHeight]=useState<number>(0);
+  //const [width,setwidth]=useState<number>(0);
+  //const [mines,setmines]=useState<number>(0);
   const difficultyChangeHandler = (
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
