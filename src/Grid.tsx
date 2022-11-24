@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import MineSweeper from "./minesweeper";
 import "./App.css";
 import { catStates } from "./App";
+import GameStats from "./GameStats";
 const Grid = (props: {
   height: number;
   width: number;
@@ -71,7 +72,7 @@ const Grid = (props: {
   const isCellClickable = (row: number, col: number): boolean => {
     if (
       grid[row][col] === Number.NEGATIVE_INFINITY ||
-      (grid[row][col] > 0 && grid[row][col] !== Number.POSITIVE_INFINITY)
+      (grid[row][col] > 0 && grid[row][col] !== Number.POSITIVE_INFINITY)||flagPositions.has(`${row},${col}`)
     )
       return false;
     return true;
@@ -127,9 +128,6 @@ const Grid = (props: {
     setCatState(catStates.happy);
   }, [setCatState]);
   useEffect(() => {
-    console.log("flagPositions set was updated");
-  }, [flagPositions]);
-  useEffect(() => {
     if (cellsLeft === 0) {
       setIsGameWon(true);
       setIsGameOver(true);
@@ -153,24 +151,19 @@ const Grid = (props: {
     });
   }, [cellsLeft, flagsCount, grid, setCatState]);
   useEffect(() => {
-    console.log("flagPositions");
+		console.log("flagPositions set was updated");
     setFlagsCount(mines - flagPositions.size);
   }, [mines, flagPositions]);
   return (
     <div className="Grid">
-      <div>
-        <h1>Level: {levelName}</h1>
-        <p>Clicks: {clicks}</p>
-        <p>Cells Left: {cellsLeft}</p>
-        <p>Flags left: {flagsCount}</p>
-        {isGameOver ? (
-          isGameWon ? (
-            <p>🎉You won 🎉</p>
-          ) : (
-            <p>GAME OVER!!!!💣</p>
-          )
-        ) : null}
-      </div>
+      <GameStats
+        isGameOver={isGameOver}
+        isGameWon={isGameWon}
+        levelName={levelName}
+        cellsLeft={cellsLeft}
+        clicks={clicks}
+        flagsCount={flagsCount}
+      />
       <div className="grid">
         {grid.map((row, r) => {
           return (
@@ -188,7 +181,7 @@ const Grid = (props: {
                     } ${
                       isGameOver &&
                       col === Number.POSITIVE_INFINITY &&
-                      (flagPositions.has(r + "," + c)
+                      (flagPositions.has(r + "," + c)||isGameWon
                         ? "mine-found"
                         : "mine-not-found")
                     } ${
@@ -210,17 +203,15 @@ const Grid = (props: {
                       placeFlagHandler(r, c);
                     }}
                     onMouseDown={(event) => {
-											if(isGameOver) return;
-											console.log(event.button);
-											if(event.button===2) return;
+                      if (isGameOver) return;
+                      if (event.button === 2) return;
                       mouseDownHandler(r, c);
                     }}
-                    onMouseUp={(event)=>{
-											if(isGameOver) return;
-											console.log(event.button);
-											if(event.button===2) return;
-											mouseUpHandler();
-										}}
+                    onMouseUp={(event) => {
+                      if (isGameOver) return;
+                      if (event.button === 2) return;
+                      mouseUpHandler();
+                    }}
                   >
                     {col > 0 && col < Number.POSITIVE_INFINITY ? col : null}
                     {col === Number.POSITIVE_INFINITY && isGameOver && "💣"}
