@@ -58,8 +58,8 @@ function App() {
   };
   return (
     <div className="App">
-      <label>Difficulty</label>
-      <select value={difficulty} onChange={difficultyChangeHandler}>
+      <label htmlFor="difficultyLevel">Difficulty</label>
+      <select value={difficulty} onChange={difficultyChangeHandler} id="difficultyLevel">
         <option value={0}>Easy</option>
         <option value={1}>Medium</option>
         <option value={2}>Hard</option>
@@ -67,11 +67,14 @@ function App() {
       <button onClick={restartHandler} className="restart-btn">
         {catState}
       </button>
-      {/*This key prop can be used to re-draw the entire Grid component*/}
       <Grid
-        {...difficultyLevels[difficulty]}
+        height={difficultyLevels[difficulty].height}
+				width={difficultyLevels[difficulty].height}
+				mines={difficultyLevels[difficulty].mines}
+				//This key prop can be used to re-draw the entire Grid component
         key={reRenderKey}
         setCatState={setCatState}
+				levelName={difficultyLevels[difficulty].levelName}
       />
     </div>
   );

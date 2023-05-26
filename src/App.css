@@ -1,27 +1,42 @@
+html {
+	font-size: 10px;
+}
+p {
+	margin: 0;
+}
 .App {
-  margin: 4rem 7rem;
+	font-size: 1.6rem;
+  margin: 2rem 0;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 .Grid {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-between;
 }
 .grid {
   display: flex;
   flex-direction: column;
   border: 2px solid black;
-	margin-left: 4rem;
+}
+.game-stats {
+	display: flex;
+	flex-direction: row;
+}
+.info-cell {
+	border: 1px solid;
+	flex-grow: 1;
+	padding: 1rem 0.5rem;
 }
 .row {
   display: flex;
   flex-direction: row;
 }
 .cell {
-  width: 40px;
-  height: 40px;
+  width: 4rem;
+  height: 4rem;
   padding: 0;
   display: flex;
   border: 1px solid gray;
@@ -29,6 +44,16 @@
   border-radius: 0;
   justify-content: center;
   align-items: center;
+}
+
+.medium .cell {
+	width: 3rem;
+  height: 3rem;
+}
+
+.hard .cell {
+	width: 2.3rem;
+	height: 2.3rem;
 }
 
 .covered {
@@ -70,12 +95,23 @@
 .restart-btn {
   cursor: pointer;
   display: flex;
-  width: 3rem;
-  height: 3rem;
-  font-size: 2rem;
+  width: 4rem;
+  height: 4rem;
+  font-size: 3rem;
   justify-content: center;
   align-items: center;
   background-color: white;
   border: 2px solid black;
   border-radius: 0;
+	line-height: 1rem;
+}
+
+/*Tablet*/
+@media screen and (min-width: 768px) {
+	
+}
+
+/*Desktop*/
+@media screen and (min-width: 1248px) {
+	
 }

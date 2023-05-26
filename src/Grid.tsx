@@ -3,14 +3,16 @@ import MineSweeper from "./minesweeper";
 import "./App.css";
 import { catStates } from "./App";
 import GameStats from "./GameStats";
-const Grid = (props: {
-  height: number;
+
+type GridProps = {
+	height: number;
   width: number;
   mines: number;
-  levelName: string;
+	levelName:string;
   setCatState: React.Dispatch<React.SetStateAction<string>>;
-}) => {
-  const { height, width, mines, levelName, setCatState } = props;
+}
+const Grid = (props: GridProps): JSX.Element => {
+  const { height, width, mines, setCatState, levelName } = props;
   const [grid, setGrid] = useState<number[][]>([]);
   const [isGameOver, setIsGameOver] = useState<boolean>(false);
   const [isGameWon, setIsGameWon] = useState<boolean>(false);
@@ -155,11 +157,10 @@ const Grid = (props: {
     setFlagsCount(mines - flagPositions.size);
   }, [mines, flagPositions]);
   return (
-    <div className="Grid">
+    <div className={`Grid${levelName?' '+levelName:''}`}>
       <GameStats
         isGameOver={isGameOver}
         isGameWon={isGameWon}
-        levelName={levelName}
         cellsLeft={cellsLeft}
         clicks={clicks}
         flagsCount={flagsCount}
