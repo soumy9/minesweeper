@@ -1,4 +1,4 @@
-name: CI/CD
+name: Deploy to GitHub Pages
 
 on:
   push:
@@ -6,21 +6,26 @@ on:
       - main
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Git
-        run: |
-          git config --global user.email "soumy99sharma@gmail.com"
-          git config --global user.name "Soumy Sharma"
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
 
       - name: Install dependencies
         run: npm install
 
-      - name: Run npm commands
-        run: npm run deploy -- -m "Deploy React app to GitHub Pages"
-          # Add more npm commands as needed
+      - name: Build project
+        run: npm run build
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          deploy_key: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build
