@@ -172,7 +172,7 @@ const Grid = (props: GridProps): JSX.Element => {
               {row.map((col, c) => {
                 return (
                   <button
-                    className={`cell ${
+                    className={`cell prevent-select ${
                       isGameOver
                         ? "uncovered"
                         : col === Number.NEGATIVE_INFINITY ||
