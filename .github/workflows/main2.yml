@@ -28,6 +28,6 @@ jobs:
 
       - name: Deploy to GitHub Pages
         run: |
-          git config --global user.email "deploy-key@example.com"
-          git config --global user.name "Deploy Key"
+          git config --global user.email "soumy99sharma@gmail.com"
+          git config --global user.name "Soumy Sharma"
           npm run deploy
