@@ -13,13 +13,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up SSH
-        run: |
-          mkdir -p ~/.ssh/
-          echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
-
       - name: Configure git
         run: |
           git config --global user.email "soumy99sharma@gmail.com"
@@ -33,7 +26,11 @@ jobs:
 
       - name: Deploy to GitHub Pages
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
         run: |
+          echo "${DEPLOY_KEY}" > deploy_key
+          chmod 600 deploy_key
+          eval $(ssh-agent -s)
+          ssh-add deploy_key
           git remote set-url origin git@github.com:${{ github.repository }}.git
           npm run deploy
